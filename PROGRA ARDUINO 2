@@ -1,0 +1,22 @@
+#define BOTON1 (1 << PD2)
+#define BOTON2 (1 << PD3)
+#define BOTON3 (1 << PD4)
+#define BOTON4 (1 << PD5)
+#define BOTON5 (1 << PD6)
+
+void setup() {
+
+  // Establece el pin del botón como entrada
+  DDRD &= ~BOTON1;
+  DDRD &= ~BOTON2;
+  DDRD &= ~BOTON3;
+  DDRD &= ~BOTON4;
+  DDRD &= ~BOTON5;
+    
+ 
+}
+
+void loop() {
+  
+ 
+}
