@@ -1,6 +1,5 @@
-//Proyecto-final-digital-1
-//Proyecto mano robotica
-
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
 #include <Servo.h>
 
 
@@ -10,13 +9,24 @@
 #define servo3 (1 << PB3)
 #define servo4 (1 << PB4)
 #define servo5 (1 << PB5)
+
 Servo myservo1;
 Servo myservo2;
 Servo myservo3;
 Servo myservo4;
 Servo myservo5;
 
+int angulo1 = 100;
+int angulo2 = 30;
+int angulo3 = 45;
+int angulo4 = 60;
+int angulo5 = 90;
+int count0;
 
+LiquidCrystal_I2C lcd(0x27,16,2);
+
+//String inputString = "";      // a String to hold incoming data
+//bool stringComplete = false;  // whether the string is complete
 
 
 void setup() {
@@ -35,64 +45,66 @@ void setup() {
   PCMSK2 |= (1 << PCINT21);
   PCMSK2 |= (1 << PCINT22);
   
-
+lcd.init(); // Inicializar el LCD
+  lcd.setBacklight(200);
   
-}
+  Serial.begin(9600);
+  // reserve 200 bytes for the inputString:
+  //inputString.reserve(200);
+  
+    // TIMER 0 for interrupt frequency 1000 Hz:
+  cli(); // stop interrupts
+  TCCR0A = 0; // set entire TCCR0A register to 0
+  TCCR0B = 0; // same for TCCR0B
+  TCNT0  = 0; // initialize counter value to 0
+  // set compare match register for 1000 Hz increments
+  OCR0A = 249; // = 16000000 / (64 * 1000) - 1 (must be <256)
+  // turn on CTC mode
+  TCCR0B |= (1 << WGM01);
+  // Set CS02, CS01 and CS00 bits for 64 prescaler
+  TCCR0B |= (0 << CS02) | (1 << CS01) | (1 << CS00);
+  // enable timer compare interrupt
+  TIMSK0 |= (1 << OCIE0A);
+  sei(); // allow interrupts
 
-// TIMER 0 for interrupt frequency 1000 Hz:
-cli(); // stop interrupts
-TCCR0A = 0; // set entire TCCR0A register to 0
-TCCR0B = 0; // same for TCCR0B
-TCNT0  = 0; // initialize counter value to 0
-// set compare match register for 1000 Hz increments
-OCR0A = 249; // = 16000000 / (64 * 1000) - 1 (must be <256)
-// turn on CTC mode
-TCCR0B |= (1 << WGM01);
-// Set CS02, CS01 and CS00 bits for 64 prescaler
-TCCR0B |= (0 << CS02) | (1 << CS01) | (1 << CS00);
-// enable timer compare interrupt
-TIMSK0 |= (1 << OCIE0A);
-sei(); // allow interrupts
+}
 
 
 void loop() {
-  // Controlar los ángulos de los servos
-  myservo1.write(90);
-  myservo2.write(90);
-  myservo3.write(90);
-  myservo4.write(90);
-  myservo5.write(90);
-
-  delay(2000);
-
- 
-  myservo1.write(0);
-  myservo2.write(0);
-  myservo3.write(0);
-  myservo4.write(0);
-  myservo5.write(0);
-
-  delay(2000);
   
-  int count0 = 0;
+   int val = Serial.read();
+  if (val & (1 << PD6)){
+    angulo1 += -10;
+  	lcd.setCursor(0,0); 
+        lcd.print("movimiento dedo 1");
+  }
+  if (val & (1 << PD5)){
+    angulo2 += 10;
+  }
+  if (val & (1 << PD4)){
+    angulo3 += -10;
+  }
+  if (val & (1 << PD3)){
+    angulo4 += 10;
+  }
+  if (val & (1 << PD2)){
+    angulo5 += -10;
+  }
   
+
+}
   ISR(TIMER0_COMPA_vect){ //1000HZ
    //interrupt commands for TIMER 0 here
    count0++;
-   if (count0 == 900){
+   if (count0 == 1000){
       count0 = 0;
-   myservo1.write(180);
-   }
-    else ( count0 == 900){
-      count0 =1;
-     myservo1.write(0);
-   myservo2.write(180);
-      
-      else (count0 == 900){
-        
+   	myservo1.write(angulo1);
+   	myservo2.write(angulo2);
+	myservo3.write(angulo3);
+	myservo4.write(angulo4);
+	myservo5.write(angulo5);
 
    
- 
+  }
 }
-  
-}
+
