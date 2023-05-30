@@ -1,8 +1,16 @@
+
 #define BOTON1 (1 << PD2)
 #define BOTON2 (1 << PD3)
 #define BOTON3 (1 << PD4)
 #define BOTON4 (1 << PD5)
 #define BOTON5 (1 << PD6)
+
+const int analogInPin = 0;  // Analog input pin that the potentiometer is attached to
+const int analogOutPin = 1;  // Analog output pin that the LED is attached to
+
+int sensorValue = 0;  // value read from the pot
+int outputValue = 0;  // value output to the PWM (analog out)
+int bot2;
 
 void setup() {
 
@@ -12,11 +20,20 @@ void setup() {
   DDRD &= ~BOTON3;
   DDRD &= ~BOTON4;
   DDRD &= ~BOTON5;
-    
+  PORTB = 01111100;
+  
+ Serial.begin(9600);   
  
 }
 
 void loop() {
   
+
+  
+  Serial.print (PORTB);
+  
+  
+  delay(200);
  
 }
+ 
