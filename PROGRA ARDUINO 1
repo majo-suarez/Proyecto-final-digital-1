@@ -1,110 +1,110 @@
-#include <Wire.h> 
-#include <LiquidCrystal_I2C.h>
+//servos
+//#include <EEPROM.h>
+
 #include <Servo.h>
 
+Servo servo1;
+Servo servo2;
+Servo servo3;
+Servo servo4;
+Servo servo5;
 
-// Definición de pines para cada servo
-#define servo1 (1 << PB1)
-#define servo2 (1 << PB2)
-#define servo3 (1 << PB3)
-#define servo4 (1 << PB4)
-#define servo5 (1 << PB5)
+#define servoPin1 (1 << PB1) // PB1
+#define servoPin2 (1 << PB2) // PB2
+#define servoPin3 (1 << PB3) // PB3
+#define servoPin4 (1 << PB4) // PB4
+#define servoPin5 (1 << PB5) // PB5
 
-Servo myservo1;
-Servo myservo2;
-Servo myservo3;
-Servo myservo4;
-Servo myservo5;
+int servo1Pos;
+int servo2Pos;
+int servo3Pos;
+int servo4Pos;
+int servo5Pos;
 
-int angulo1 = 100;
-int angulo2 = 30;
-int angulo3 = 45;
-int angulo4 = 60;
-int angulo5 = 90;
-int count0;
-
-LiquidCrystal_I2C lcd(0x27,16,2);
-
-//String inputString = "";      // a String to hold incoming data
-//bool stringComplete = false;  // whether the string is complete
-
+//int servo1EEPROMAddress = 0;
+//int servo2EEPROMAddress = 1;
+//int servo3EEPROMAddress = 2;
+//int servo4EEPROMAddress = 3;
+//int servo5EEPROMAddress = 4;
 
 void setup() {
-  myservo1.attach(9);
-  myservo2.attach(10);
-  myservo3.attach(11);
-  myservo4.attach(12);
-  myservo5.attach(13);
-
-  
-  
-  //Configurar interrupciones 
-  PCMSK2 |= (1 << PCINT18);
-  PCMSK2 |= (1 << PCINT19);
-  PCMSK2 |= (1 << PCINT20);
-  PCMSK2 |= (1 << PCINT21);
-  PCMSK2 |= (1 << PCINT22);
-  
-lcd.init(); // Inicializar el LCD
-  lcd.setBacklight(200);
-  
   Serial.begin(9600);
-  // reserve 200 bytes for the inputString:
-  //inputString.reserve(200);
-  
-    // TIMER 0 for interrupt frequency 1000 Hz:
-  cli(); // stop interrupts
-  TCCR0A = 0; // set entire TCCR0A register to 0
-  TCCR0B = 0; // same for TCCR0B
-  TCNT0  = 0; // initialize counter value to 0
-  // set compare match register for 1000 Hz increments
-  OCR0A = 249; // = 16000000 / (64 * 1000) - 1 (must be <256)
-  // turn on CTC mode
-  TCCR0B |= (1 << WGM01);
-  // Set CS02, CS01 and CS00 bits for 64 prescaler
-  TCCR0B |= (0 << CS02) | (1 << CS01) | (1 << CS00);
-  // enable timer compare interrupt
-  TIMSK0 |= (1 << OCIE0A);
-  sei(); // allow interrupts
+  servo1.attach(servoPin1);
+  servo2.attach(servoPin2);
+  servo3.attach(servoPin3);
+  servo4.attach(servoPin4);
+  servo5.attach(servoPin5);
 
+  // Configurar pines de los servos como salidas
+  DDRB |= (1 << servoPin1) | (1 << servoPin2) | (1 << servoPin3) | (1 << servoPin4) | (1 << servoPin5);
+
+  // Configurar Timer 0 en modo CTC (Clear Timer on Compare Match)
+  TCCR0A = (1 << WGM01);
+  // Establecer el valor de comparación para obtener una frecuencia de interrupción de 100 Hz (10 ms)
+  OCR0A = 77;
+  // Habilitar la interrupción del Timer 0 en comparación con el valor del registro OCR0A
+  TIMSK0 = (1 << OCIE0A);
+  // Establecer la fuente de reloj del Timer 0 en F_CPU/1024
+  TCCR0B = (1 << CS02) | (1 << CS00);
 }
-
 
 void loop() {
-  
-   int val = Serial.read();
-  if (val & (1 << PD6)){
-    angulo1 += -10;
-  	lcd.setCursor(0,0); 
-        lcd.print("movimiento dedo 1");
-  }
-  if (val & (1 << PD5)){
-    angulo2 += 10;
-  }
-  if (val & (1 << PD4)){
-    angulo3 += -10;
-  }
-  if (val & (1 << PD3)){
-    angulo4 += 10;
-  }
-  if (val & (1 << PD2)){
-    angulo5 += -10;
-  }
-  
-
-}
-  ISR(TIMER0_COMPA_vect){ //1000HZ
-   //interrupt commands for TIMER 0 here
-   count0++;
-   if (count0 == 1000){
-      count0 = 0;
-   	myservo1.write(angulo1);
-   	myservo2.write(angulo2);
-	myservo3.write(angulo3);
-	myservo4.write(angulo4);
-	myservo5.write(angulo5);
-
-   
-  }
+  // El código principal se ejecuta en la interrupción del Timer 0
 }
 
+ISR(TIMER0_COMPA_vect) {
+  if (Serial.available() >= 5) {
+    // Leer estados de los botones desde Arduino 1
+    int buttonState1 = Serial.read();
+
+    int buttonState2 = Serial.read();
+
+    int buttonState3 = Serial.read();
+
+    int buttonState4 = Serial.read();
+
+    int buttonState5 = Serial.read();
+
+
+    // Verificar los estados de los botones y mover los servos en consecuencia
+    if (buttonState1 == HIGH) {
+      // Se presiona el botón 1, mover el servo 1
+      servo1Pos = 45; // Calcular la posición del servo para el botón 1
+      servo1.write(servo1Pos);
+      //writeEEPROM(servo1EEPROMAddress, servo1Pos);
+    }
+
+    if (buttonState2 == HIGH) {
+      // Se presiona el botón 2, mover el servo 2
+      servo2Pos = 50; // Calcular la posición del servo para el botón 2
+      servo2.write(servo2Pos);
+      //writeEEPROM(servo2EEPROMAddress, servo2Pos);
+    }
+
+    if (buttonState3 == HIGH) {
+      // Se presiona el botón 3, mover el servo 3
+      servo3Pos = 60; // Calcular la posición del servo para el botón 3
+      servo3.write(servo3Pos);
+      //writeEEPROM(servo3EEPROMAddress, servo3Pos);
+    }
+
+    if (buttonState4 == HIGH) {
+      // Se presiona el botón 4, mover el servo 4
+      servo4Pos = 70; // Calcular la posición del servo para el botón 4
+      servo4.write(servo4Pos);
+      //writeEEPROM(servo4EEPROMAddress, servo4Pos);
+    }
+
+    if (buttonState5 == HIGH) {
+      // Se presiona el botón 5, mover el servo 5
+      servo5Pos = 80; // Calcular la posición del servo para el botón 5
+      servo5.write(servo5Pos);
+      //writeEEPROM(servo5EEPROMAddress, servo5Pos);
+    }
+  }
+}
+
+/*void writeEEPROM(int address, int value) {
+  // Escribir un byte en la dirección de EEPROM especificada
+  EEPROM.update(address, value);
+}*/
