@@ -1,39 +1,32 @@
-
-#define BOTON1 (1 << PD2)
-#define BOTON2 (1 << PD3)
-#define BOTON3 (1 << PD4)
-#define BOTON4 (1 << PD5)
-#define BOTON5 (1 << PD6)
-
-const int analogInPin = 0;  // Analog input pin that the potentiometer is attached to
-const int analogOutPin = 1;  // Analog output pin that the LED is attached to
-
-int sensorValue = 0;  // value read from the pot
-int outputValue = 0;  // value output to the PWM (analog out)
-int bot2;
+const int buttonPin1 = 2;
+const int buttonPin2 = 3;
+const int buttonPin3 = 4;
+const int buttonPin4 = 5;
+const int buttonPin5 = 6;
 
 void setup() {
+  pinMode(buttonPin1, INPUT_PULLUP);
+  pinMode(buttonPin2, INPUT_PULLUP);
+  pinMode(buttonPin3, INPUT_PULLUP);
+  pinMode(buttonPin4, INPUT_PULLUP);
+  pinMode(buttonPin5, INPUT_PULLUP);
 
-  // Establece el pin del botón como entrada
-  DDRD &= ~BOTON1;
-  DDRD &= ~BOTON2;
-  DDRD &= ~BOTON3;
-  DDRD &= ~BOTON4;
-  DDRD &= ~BOTON5;
-  PORTB = 01111100;
-  
- Serial.begin(9600);   
- 
+  Serial.begin(9600);
 }
 
 void loop() {
-  
+  int buttonState1 = digitalRead(buttonPin1);
+  int buttonState2 = digitalRead(buttonPin2);
+  int buttonState3 = digitalRead(buttonPin3);
+  int buttonState4 = digitalRead(buttonPin4);
+  int buttonState5 = digitalRead(buttonPin5);
 
-  
-  Serial.print (PORTB);
-  
-  
-  delay(200);
- 
+  Serial.print(buttonState1);
+  Serial.print(buttonState2);
+  Serial.print(buttonState3);
+  Serial.print(buttonState4);
+  Serial.println(buttonState5);
+
+  delay(100);  // Adjust delay as needed
 }
- 
+
