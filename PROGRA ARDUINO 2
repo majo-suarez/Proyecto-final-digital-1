@@ -1,32 +1,79 @@
-const int buttonPin1 = 2;
-const int buttonPin2 = 3;
-const int buttonPin3 = 4;
-const int buttonPin4 = 5;
-const int buttonPin5 = 6;
+int buttonPin1 = 2;
+int buttonPin2 = 3;
+int buttonPin3 = 4;
+int buttonPin4 = 5;
+int buttonPin5 = 6;
+int buttonPin6 = 7;
+int buttonPin7 = 8;
+
+int buttonState1 = 0;
+int buttonState2 = 0;
+int buttonState3 = 0;
+int buttonState4 = 0;
+int buttonState5 = 0;
+int buttonState6 = 0;
+int buttonState7 = 0;
+
+
 
 void setup() {
+  Serial.begin(9600);
+  
   pinMode(buttonPin1, INPUT_PULLUP);
   pinMode(buttonPin2, INPUT_PULLUP);
   pinMode(buttonPin3, INPUT_PULLUP);
   pinMode(buttonPin4, INPUT_PULLUP);
   pinMode(buttonPin5, INPUT_PULLUP);
-
-  Serial.begin(9600);
+  pinMode(buttonPin6, INPUT_PULLUP);
+  pinMode(buttonPin7, INPUT_PULLUP);
+ 
+ 
 }
 
 void loop() {
-  int buttonState1 = digitalRead(buttonPin1);
-  int buttonState2 = digitalRead(buttonPin2);
-  int buttonState3 = digitalRead(buttonPin3);
-  int buttonState4 = digitalRead(buttonPin4);
-  int buttonState5 = digitalRead(buttonPin5);
+  
+  buttonState1 = digitalRead(buttonPin1);
+  buttonState2 = digitalRead(buttonPin2);
+  buttonState3 = digitalRead(buttonPin3);
+  buttonState4 = digitalRead(buttonPin4);
+  buttonState5 = digitalRead(buttonPin5);
+  buttonState6 = digitalRead(buttonPin6);
+  buttonState7 = digitalRead(buttonPin7);
+  
+  if (buttonState1 == 0){
+    Serial.write('1');
+    delay(10);
+  }
+  else if (buttonState2 == 0){
+    Serial.write('2');
+    delay(10);
+  }
+  else if (buttonState3 == 0){
+    Serial.write('3');
+    delay(10);
+  }
+  else if (buttonState4 == 0){
+    Serial.write('4');
+    delay(10);
+  }
+  else if (buttonState5 == 0){
+    Serial.write('5');
+    delay(10);
+  }
+  else if (buttonState6 == 0){
+    Serial.write('6');
+    delay(10);
+  }
+  else if (buttonState7 == 0){
+    Serial.write('7');
+    delay(10);
+  }
+  
+  else{
+    Serial.write('0');
+    delay(50);
+  }
 
-  Serial.print(buttonState1);
-  Serial.print(buttonState2);
-  Serial.print(buttonState3);
-  Serial.print(buttonState4);
-  Serial.println(buttonState5);
-
-  delay(100);  // Adjust delay as needed
+ 
+  delay(100);  // Adjust delay as needed*/
 }
-
