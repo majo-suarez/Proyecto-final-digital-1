@@ -1,6 +1,6 @@
 #include <Servo.h>
 #include <Wire.h> 
-#include <LiquidCrystal_I2C.h>
+#include <LiquidCrystal.h>
 
 Servo servo1;
 Servo servo2;
@@ -8,7 +8,7 @@ Servo servo3;
 Servo servo4;
 Servo servo5;
 
-LiquidCrystal_I2C lcd(0x27,16,2);
+LiquidCrystal lcd(2, 3, 4, 7, 8, 12);//RS,E,DB4,DB5,DB6,DB7
 
 int servoPin1 = 5;
 int servoPin2 = 6;
@@ -45,9 +45,8 @@ int readEEPROM(int address) {
 
 void setup() {
   Serial.begin(9600);
-  
- lcd.init(); // Inicializar el LCD
-  lcd.setBacklight(200); //Encender la luz de fondo
+  lcd.begin(16, 2);
+  //lcd.setBacklight(200); //Encender la luz de fondo
   
   servo1.attach(servoPin1);
   servo2.attach(servoPin2);
@@ -55,10 +54,7 @@ void setup() {
   servo4.attach(servoPin4);
   servo5.attach(servoPin5);
 
-  // Configurar pines de los servos como salidas
-  //DDRB |= (1 << servoPin1) | (1 << servoPin2) | (1 << servoPin3) | (1 << servoPin4) | (1 << servoPin5);
-
-  // Configurar Timer 0 en modo CTC (Clear Timer on Compare Match)
+   // Configurar Timer 0 en modo CTC (Clear Timer on Compare Match)
   TCCR0A = (1 << WGM01);
   // Establecer el valor de comparación para obtener una frecuencia de interrupción de 100 Hz (10 ms)
   OCR0A = 77;
@@ -71,6 +67,8 @@ void setup() {
 
 void loop() {
   // El código principal se ejecuta en la interrupción del Timer 0
+  
+  
 }
 
 ISR(TIMER0_COMPA_vect) {
@@ -83,63 +81,73 @@ ISR(TIMER0_COMPA_vect) {
 
     // Verificar los estados de los botones y mover los servos en consecuencia
     if (buttonState == 49) {
+      lcd.setCursor(0,0); 
+      lcd.print("movimiento");
+      lcd.setCursor(0,1);
+      lcd.print("pulgar");
+              
       // Se presiona el botón 1, mover el servo 1
       servo1Pos = 45; // Calcular la posición del servo para el botón 1
       servo1.write(servo1Pos);
-      writeEEPROM(servo1EEPROMAddress, servo1Pos);
+      writeEEPROM(servo1EEPROMAddress, servo1Pos);   
       
-      /*lcd.setCursor(0,0); 
-      lcd.print("movimiento");
-      lcd.setCursor(0,1);
-      lcd.print("pulgar:"); */
     }
 	
     
     if (buttonState == 50) {
+      lcd.clear();
+      lcd.setCursor(0,0); 
+      lcd.print("movimiento");
+      lcd.setCursor(0,1);
+      lcd.print("indice");
       // Se presiona el botón 2, mover el servo 2
       servo2Pos = 50; // Calcular la posición del servo para el botón 2
       servo2.write(servo2Pos);
       writeEEPROM(servo2EEPROMAddress, servo2Pos);
-      /*lcd.setCursor(0,0); 
-      lcd.print("movimiento");
-      lcd.setCursor(0,1);
-      lcd.print("índice:");*/
     }
 
     if (buttonState == 51) {
+      lcd.clear();
+      lcd.setCursor(0,0); 
+      lcd.print("movimiento");
+      lcd.setCursor(0,1);
+      lcd.print("en medio");
       // Se presiona el botón 3, mover el servo 3
       servo3Pos = 60; // Calcular la posición del servo para el botón 3
       servo3.write(servo3Pos);
       writeEEPROM(servo3EEPROMAddress, servo3Pos);
-      
-      /*  lcd.setCursor(0,0); 
-      lcd.print("movimiento");
-      lcd.setCursor(0,1);
-      lcd.print("del medio:");*/
     }
 
     if (buttonState == 52) {
+      lcd.clear();
+      lcd.setCursor(0,0); 
+      lcd.print("movimiento");
+      lcd.setCursor(0,1);
+      lcd.print("anular");
       // Se presiona el botón 4, mover el servo 4
       servo4Pos = 70; // Calcular la posición del servo para el botón 4
       servo4.write(servo4Pos);
       writeEEPROM(servo4EEPROMAddress, servo4Pos);
-      /*  lcd.setCursor(0,0); 
-      lcd.print("movimiento");
-      lcd.setCursor(0,1);
-      lcd.print("anular:");*/
     }
 
     if (buttonState == 53) {
+      lcd.clear();
+      lcd.setCursor(0,0); 
+      lcd.print("movimiento");
+      lcd.setCursor(0,1);
+      lcd.print("menique");
       // Se presiona el botón 5, mover el servo 5
       servo5Pos = 80; // Calcular la posición del servo para el botón 5
       servo5.write(servo5Pos);
       writeEEPROM(servo5EEPROMAddress, servo5Pos);
-      /* lcd.setCursor(0,0); 
-      lcd.print("movimiento");
-      lcd.setCursor(0,1);
-      lcd.print("meñique:");*/
     }
     if (buttonState == 54) {
+      lcd.clear();
+      lcd.setCursor(0,0); 
+      lcd.print("movimiento");
+      lcd.setCursor(0,1);
+      lcd.print("guardado");
+      
       servo1Pos = readEEPROM(servo1EEPROMAddress);
       servo2Pos = readEEPROM(servo2EEPROMAddress);
       servo3Pos = readEEPROM(servo3EEPROMAddress);
@@ -151,30 +159,23 @@ ISR(TIMER0_COMPA_vect) {
       servo3.write(servo3Pos);
       servo4.write(servo4Pos);
       servo5.write(servo5Pos);
-      
-         /*   lcd.setCursor(0,0); 
-        lcd.print("movimiento");
-      lcd.setCursor(0,1);
-        lcd.print("guardado:"); */
-     
-      
     }
     
     if (buttonState == 55) {
-      
+      lcd.clear();
+      lcd.setCursor(0,0); 
+      lcd.print("reset");
+            
       servo1.write(0);
       servo2.write(0);
       servo3.write(0);
       servo4.write(0);
-      servo5.write(0);
-      
-            lcd.setCursor(0,0); 
-        lcd.print("reset");
-     
+      servo5.write(0);     
     }
     
   }
 }
+
 
 
 
