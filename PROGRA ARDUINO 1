@@ -87,7 +87,7 @@ ISR(TIMER0_COMPA_vect) {
       lcd.print("pulgar");
               
       // Se presiona el botón 1, mover el servo 1
-      servo1Pos = 45; // Calcular la posición del servo para el botón 1
+      servo1Pos = 90; // Calcular la posición del servo para el botón 1
       servo1.write(servo1Pos);
       writeEEPROM(servo1EEPROMAddress, servo1Pos);   
       
@@ -101,7 +101,7 @@ ISR(TIMER0_COMPA_vect) {
       lcd.setCursor(0,1);
       lcd.print("indice");
       // Se presiona el botón 2, mover el servo 2
-      servo2Pos = 50; // Calcular la posición del servo para el botón 2
+      servo2Pos = 90; // Calcular la posición del servo para el botón 2
       servo2.write(servo2Pos);
       writeEEPROM(servo2EEPROMAddress, servo2Pos);
     }
@@ -113,7 +113,7 @@ ISR(TIMER0_COMPA_vect) {
       lcd.setCursor(0,1);
       lcd.print("en medio");
       // Se presiona el botón 3, mover el servo 3
-      servo3Pos = 60; // Calcular la posición del servo para el botón 3
+      servo3Pos = 90; // Calcular la posición del servo para el botón 3
       servo3.write(servo3Pos);
       writeEEPROM(servo3EEPROMAddress, servo3Pos);
     }
@@ -125,7 +125,7 @@ ISR(TIMER0_COMPA_vect) {
       lcd.setCursor(0,1);
       lcd.print("anular");
       // Se presiona el botón 4, mover el servo 4
-      servo4Pos = 70; // Calcular la posición del servo para el botón 4
+      servo4Pos = 90; // Calcular la posición del servo para el botón 4
       servo4.write(servo4Pos);
       writeEEPROM(servo4EEPROMAddress, servo4Pos);
     }
@@ -137,7 +137,7 @@ ISR(TIMER0_COMPA_vect) {
       lcd.setCursor(0,1);
       lcd.print("menique");
       // Se presiona el botón 5, mover el servo 5
-      servo5Pos = 80; // Calcular la posición del servo para el botón 5
+      servo5Pos = 90; // Calcular la posición del servo para el botón 5
       servo5.write(servo5Pos);
       writeEEPROM(servo5EEPROMAddress, servo5Pos);
     }
@@ -175,7 +175,3 @@ ISR(TIMER0_COMPA_vect) {
     
   }
 }
-
-
-
-
