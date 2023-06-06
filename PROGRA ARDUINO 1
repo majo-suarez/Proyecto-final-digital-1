@@ -46,7 +46,6 @@ int readEEPROM(int address) {
 void setup() {
   Serial.begin(9600);
   lcd.begin(16, 2);
-  //lcd.setBacklight(200); //Encender la luz de fondo
   
   servo1.attach(servoPin1);
   servo2.attach(servoPin2);
@@ -66,9 +65,7 @@ void setup() {
 
 
 void loop() {
-  // El código principal se ejecuta en la interrupción del Timer 0
-  
-  
+  // El código principal se ejecuta en la interrupción del Timer 0 
 }
 
 ISR(TIMER0_COMPA_vect) {
@@ -78,7 +75,6 @@ ISR(TIMER0_COMPA_vect) {
     buttonState = Serial.read();
     Serial.print(buttonState);
 	
-
     // Verificar los estados de los botones y mover los servos en consecuencia
     if (buttonState == 49) {
       lcd.setCursor(0,0); 
@@ -92,8 +88,7 @@ ISR(TIMER0_COMPA_vect) {
       writeEEPROM(servo1EEPROMAddress, servo1Pos);   
       
     }
-	
-    
+	 
     if (buttonState == 50) {
       lcd.clear();
       lcd.setCursor(0,0); 
